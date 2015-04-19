@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <string.h>
 #include <sys/time.h>
 #include <omp.h>
 
@@ -25,17 +26,26 @@ int main(int argc,char* argv[])
   struct timeval t1,t2;
   //dimension of matrix and vector, and number of iterations. Matrix is square matrix
   unsigned int dim,iter;
-  if (argc == 0) {
+
+  //verbose flag for printing out vectors
+  char verbose = 0;
+
+  //initialize values
+  if (argc == 1) {
     printf("No dim or iteration specified. Defaulting values dim = 100, iter = 10.\n");
     dim = 100;
     iter = 10;
-  } else if (argc == 1) {
+  } else if (argc == 2) {
     printf("No iteration specified. Defaulting value iter = 10.\n");
     iter = 10;
     dim = atoi(argv[1]);
-  } else {
+  } else if (argc == 3) {
     dim = atoi(argv[1]);
     iter = atoi(argv[2]);
+  } else {
+    dim = atoi(argv[2]);
+    iter = atoi(argv[3]);
+    if (strcmp(argv[1],"-v") == 0) verbose = 1;
   }
   if (dim < 0) {
     printf("Dim input is negative. Defaulting value dim = 100.\n");
@@ -52,14 +62,11 @@ int main(int argc,char* argv[])
     gettimeofday(&t1,NULL);
 
     double *u = malloc(sizeof(double)*dim);
-    double f = h*h;
     //function f is 1, u^0 starts as 0 vec
+    double f = h*h;
     int i;
     #pragma omp for
-    for (i = 0;i<dim;i++)
-    {
-      u[i] = 0.0;
-    }
+    for (i = 0;i<dim;i++) u[i] = 0.0;
 
       //Jacobi
 
@@ -78,12 +85,13 @@ int main(int argc,char* argv[])
           u[k] = un[k];
         }
 
+        //print out vectors to check
+        if (verbose) { 
         #pragma omp for
-        for (k=0;k<dim;k++){
-          printf("%lf ",u[k]);
-        }
+        for (k=0;k<dim;k++) printf("%lf ",u[k]);
         printf("\n");
         free(un);
+        }
       }
     free(u);
 
