@@ -1,0 +1,15 @@
+All results were done for 1000 iterations for vectors of length N = 100,000, 1000 iterations, and number of threads T.
+
+Jacobi:
+T = 16    run time = 0.659573 s.
+T = 32    run time = 0.688806 s.
+T = 64    run time = 1.519414 s.
+T = 128   run time = 2.774258 s.
+T = 256   run time = 7.154101 s.
+
+Gauss-Seidel:
+T = 16    run time = 0.655410 s.
+T = 32    run time = 0.714454 s.
+T = 64    run time = 1.418689 s.
+T = 128   run time = 3.434527 s.
+T = 256   run time = 7.875910 s.

@@ -16,13 +16,14 @@ void gauss_seidel(double* u_new, double* u, double h2,unsigned int dim)
   {
     u_new[i] = 0.5*(h2+u[i-1]+u[i+1]);
   }
+  if (dim % 2 == 1) u_new[dim-1] = 0.5*(h2+u[dim-2]);
   //then update the black (odd) entries with new reds
   #pragma omp for
   for (i = 1;i<dim-1;i+=2)
   {
     u_new[i] = 0.5*(h2+u_new[i-1]+u_new[i+1]);
   }
-  u_new[dim-1] = 0.5*(h2+u_new[dim-2]);
+  if (dim % 2 == 0) u_new[dim-1] = 0.5*(h2+u_new[dim-2]);
 }
 
 int main(int argc,char* argv[])
@@ -89,15 +90,16 @@ int main(int argc,char* argv[])
         #pragma omp for
         for (k = 0;k<dim;k++) u[k] = un[k];
 
+        free(un);
+      }
+    free(u);
         //print out vectors to check.
         if (verbose) {
+        int k;
         #pragma omp for
         for (k=0;k<dim;k++) printf("%lf ",u[k]);
         printf("\n");
-        free(un);
         }
-      }
-    free(u);
 
     //end time
     gettimeofday(&t2,NULL);
