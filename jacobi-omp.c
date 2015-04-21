@@ -80,20 +80,17 @@ int main(int argc,char* argv[])
         jacobi(un,u,f,dim);
         int k;
         #pragma omp for
-        for (k = 0;k<dim;k++)
-        {
-          u[k] = un[k];
-        }
-
-        //print out vectors to check
+        for (k = 0;k<dim;k++) u[k] = un[k];
+        free(un);
+      }
+    free(u);
+        //print out final vector to check
         if (verbose) { 
+        int k;
         #pragma omp for
         for (k=0;k<dim;k++) printf("%lf ",u[k]);
         printf("\n");
-        free(un);
         }
-      }
-    free(u);
 
     //end time
     gettimeofday(&t2,NULL);
